@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import fetch from "node-fetch";
 
-const allowedOrigins = ['http://localhost:3000', 'http://localhost:81', 'https://gadetector.bohr.io/'];
+const allowedOrigins = ['http://localhost:3000', 'http://localhost:81', 'https://gadetector.bohr.io', 'https://gadetector.blueshift.cc'];
 
 const options: cors.CorsOptions = {
   origin: allowedOrigins
