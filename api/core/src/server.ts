@@ -14,8 +14,20 @@ app.use(cors(options));
 app.use(bodyParser.json({ limit: "100mb" }))
 app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }))
 
-async function isGA3(data: any) {
+async function isGA3UA(data: any) {
   const regexTag = /(['"]UA-[a-zA-Z0-9-]*['"])/m;
+  let m;
+
+  const tag = data.match(regexTag);
+
+  if (tag?.length > 0) {
+    return tag[0];
+  }
+  return null;
+}
+
+async function isGA3GTM(data: any) {
+  const regexTag = /([=]GTM-[a-zA-Z0-9-]*['"])/m;
   let m;
 
   const tag = data.match(regexTag);
@@ -55,16 +67,20 @@ app.post("/process", async function (req: Request, res: Response) {
   for (let i = 0; i < urlsDeDuplicated.length; i++) {
     const servers = await fetch(urlsDeDuplicated[i]);
     const data = await servers.text();
-    const is_ga3 = await isGA3(data);
+    const is_ga3 = await isGA3UA(data);
+    const is_ga3gtm = await isGA3GTM(data);
     const is_ga4 = await isGA4(data);
 
     if (is_ga3 != null) {
-      responseData.push({ "url": urlsDeDuplicated[i], "version": 3, tag: is_ga3 });
+      responseData.push({ "url": urlsDeDuplicated[i], "version": 3, tag: is_ga3.slice(1, -1) });
+    }
+    if (is_ga3gtm != null) {
+      responseData.push({ "url": urlsDeDuplicated[i], "version": 3, tag: is_ga3gtm.slice(1, -1) });
     }
     if (is_ga4 != null) {
-      responseData.push({ "url": urlsDeDuplicated[i], "version": 4, tag: is_ga4 });
+      responseData.push({ "url": urlsDeDuplicated[i], "version": 4, tag: is_ga4.slice(1, -1) });
     }
-    if (is_ga3 == null && is_ga4 == null) {
+    if (is_ga3 == null && is_ga3gtm == null && is_ga4 == null) {
       responseData.push({ "url": urlsDeDuplicated[i], "version": 0, tag: 'sem_tag' });
     }
   }
