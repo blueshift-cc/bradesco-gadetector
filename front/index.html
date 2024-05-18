@@ -1,54 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title>GA Version Detector</title>
-        <!-- Favicon-->
-        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
-        <!-- Core theme CSS (includes Bootstrap)-->
-        <link href="css/styles.css" rel="stylesheet" />
-    </head>
-    <body>
-        <!-- Responsive navbar-->
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-            <div class="container">
-                <a class="navbar-brand" href="#">GA Version Detector</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">Home</a></li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
-        <!-- Page content-->
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>GA Version Detector</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="css/bootstrap.css" rel="stylesheet" />
+    <link href="css/datatables.min.css" rel="stylesheet" type="text/css">
+    <link href="css/buttons.dataTables.css" rel="stylesheet" type="text/css">
+    <link href="css/style.css" rel="stylesheet" />
+</head>
+
+<body>
+    <!-- Responsive navbar-->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <div class="mt-5">
-                <div class="mb-3">
-                    <label for="urlTextArea" class="form-label">URLs - Separadas por ponto-virgula( ; )</label>
-                    <textarea class="form-control" id="urlTextArea" rows="3"></textarea>
-                    </div>
-                    <button id="submitButton" class="btn btn-primary">Enviar</button>
-                </div>
-                <table id="example" class="table table-striped" style="width:100%">
-                    <thead>
-                        <tr>
-                            <th>URL</th>
-                            <th>Versão</th>
-                            <th>Tag</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tableData">
-                    </tbody>
-                </table>
+            <a class="navbar-brand" href="#">GA Version Detector</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">Home</a></li>
+                </ul>
             </div>
         </div>
-        <!-- Bootstrap core JS-->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- Core theme JS-->
-        <script src="js/scripts.js"></script>
-    </body>
+    </nav>
+    <!-- Page content-->
+    <div class="container">
+        <div class="mt-5">
+            <div class="mb-3">
+                <label for="urlTextArea" class="form-label">URLs - Separadas por ponto-virgula(;),quebras de linha e
+                    espaços.</label>
+                <textarea class="form-control" id="urlTextArea" rows="5"></textarea>
+            </div>
+            <button id="submitButton" class="btn btn-primary">Enviar</button>
+        </div>
+        <div class="loading-spinner" id="loading-spinner" style="display: none;">
+            <div class="spinner-border" role="status">
+            </div>
+        </div>
+        <div id="resultsDiv" style="display: none;">
+            <canvas class="container d-flex align-items-center justify-content-center mb-5" id="chartId"
+                aria-label="chart" height="350" width="580"></canvas>
+            <table id="results-table" class="table table-striped mb-5" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>URL</th>
+                        <th>Versão</th>
+                        <th>Tag</th>
+                    </tr>
+                </thead>
+                <tbody id="tableData">
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- Bootstrap core JS-->
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <!-- Core theme JS-->
+    <script src="js/dataTables.min.js"></script>
+    <script src="js/dataTables.buttons.js"></script>
+    <script src="js/buttons.dataTables.js"></script>
+    <script src="js/jszip.min.js"></script>
+    <script src="js/pdfmake.min.js"></script>
+    <script src="js/vfs_fonts.js"></script>
+    <script src="js/buttons.html5.min.js"></script>
+    <script src="js/buttons.print.min.js"></script>
+
+    <script src="js/chart.umd.min.js"></script>
+
+    <script src="js/scripts.js"></script>
+</body>
+
 </html>

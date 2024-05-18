@@ -46,22 +46,26 @@ app.post("/process", async function (req: Request, res: Response) {
   // console.log(req);
   // res.send("ok");
   // return;
-  const urls = req.body?.urlTextArea.split(";");
+  //const urls: string[] = req.body?.urlTextArea.split(";");
+  const urls: string[] = req.body?.urlTextArea.split(/[;\n ]/);
+
+  const urlsDeDuplicated = [...new Set(urls)];
+
   var responseData = [];
-  for (let i = 0; i < urls.length; i++) {
-    const servers = await fetch(urls[i]);
+  for (let i = 0; i < urlsDeDuplicated.length; i++) {
+    const servers = await fetch(urlsDeDuplicated[i]);
     const data = await servers.text();
     const is_ga3 = await isGA3(data);
     const is_ga4 = await isGA4(data);
 
     if (is_ga3 != null) {
-      responseData.push({ "url": urls[i], "version": 3, tag: is_ga3 });
+      responseData.push({ "url": urlsDeDuplicated[i], "version": 3, tag: is_ga3 });
     }
     if (is_ga4 != null) {
-      responseData.push({ "url": urls[i], "version": 4, tag: is_ga4 });
+      responseData.push({ "url": urlsDeDuplicated[i], "version": 4, tag: is_ga4 });
     }
     if (is_ga3 == null && is_ga4 == null) {
-      responseData.push({ "url": urls[i], "version": 0, tag: 'sem_tag' });
+      responseData.push({ "url": urlsDeDuplicated[i], "version": 0, tag: 'sem_tag' });
     }
   }
   res.json(responseData);
