@@ -27,6 +27,7 @@ document.getElementById('submitButton').addEventListener('click', function () {
         var temp = "";
         var ga3count = 0;
         var ga4count = 0;
+        var offlinecount = 0;
         var ganonecount = 0;
         data.forEach((itemData) => {
           temp += "<tr>";
@@ -39,6 +40,9 @@ document.getElementById('submitButton').addEventListener('click', function () {
           }
           else if (itemData.version == 4) {
             ga4count++;
+          }
+          else if (itemData.tag == "offline") {
+            offlinecount++;
           }
           else {
             ganonecount++;
@@ -64,11 +68,11 @@ document.getElementById('submitButton').addEventListener('click', function () {
         let chartConfig = {
           type: 'doughnut',
           data: {
-            labels: ["GA3", "GA4", "NÃO TEM GA"],
+            labels: ["GA3", "GA4", "NÃO TEM GA", "OFFLINE"],
             datasets: [{
               label: "Versão do Google Analytics",
-              data: [ga3count, ga4count, ganonecount],
-              backgroundColor: ['yellow', 'green', 'red'],
+              data: [ga3count, ga4count, ganonecount, offlinecount],
+              backgroundColor: ['yellow', 'green', 'red', 'gray'],
               hoverOffset: 5
             }],
           },
