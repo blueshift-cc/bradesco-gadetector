@@ -107,7 +107,7 @@ document.getElementById('submitButton').addEventListener('click', function () {
         let chartConfig = {
           type: 'doughnut',
           data: {
-            labels: ["GA3", "GA4", "GA4/GA4", "NÃO TEM GA", "OFFLINE"],
+            labels: ["GA3", "GA4", "GA3/GA4", "NÃO TEM GA", "OFFLINE"],
             datasets: [{
               label: "Versão do Google Analytics",
               data: [ga3count, ga4count, ga34count, ganonecount, offlinecount],
