@@ -28,7 +28,7 @@ function isValidHttpUrl(string: any) {
 }
 
 async function isGA3UA(data: any) {
-  const regexTag = /(['"]UA-[a-zA-Z0-9-]*['"])/m;
+  const regexTag = /(['"]UA-[a-zA-Z0-9-]*['"])/gm;
   let m;
 
   const tag = data.match(regexTag);
@@ -40,7 +40,7 @@ async function isGA3UA(data: any) {
 }
 
 async function isGA3GTM(data: any) {
-  const regexTag = /([=]GTM-[a-zA-Z0-9-]*['"])/m;
+  const regexTag = /([=]GTM-[a-zA-Z0-9-]*['"])/gm;
   let m;
 
   const tag = data.match(regexTag);
@@ -52,7 +52,7 @@ async function isGA3GTM(data: any) {
 }
 
 async function isGA4(data: any) {
-  const regexTag = /(['"]GTM-[a-zA-Z0-9]*['"])/m;
+  const regexTag = /(['"]GTM-[a-zA-Z0-9]*['"])/gm;
   let m;
 
   const tag = data.match(regexTag);
@@ -89,15 +89,22 @@ app.post("/process", async function (req: Request, res: Response) {
         const is_ga3gtm = await isGA3GTM(data);
         const is_ga4 = await isGA4(data);
 
-        if (is_ga3 != null) {
-          responseData.push({ "url": urlsDeDuplicated[i], "version": 3, tag: is_ga3.slice(1, -1) });
+        if ((is_ga3 != null || is_ga3gtm != null) && is_ga4 != null) {
+          responseData.push({ "url": urlsDeDuplicated[i], "version": "3, 4", tag: [...new Set([is_ga3?.slice(1, -1), is_ga3gtm?.slice(1, -1), is_ga4?.slice(1, -1)].filter(n => n))].toString() });
+
         }
-        if (is_ga3gtm != null) {
-          responseData.push({ "url": urlsDeDuplicated[i], "version": 3, tag: is_ga3gtm.slice(1, -1) });
+        else {
+          if (is_ga3 != null) {
+            responseData.push({ "url": urlsDeDuplicated[i], "version": 3, tag: is_ga3.slice(1, -1) });
+          }
+          if (is_ga3gtm != null) {
+            responseData.push({ "url": urlsDeDuplicated[i], "version": 3, tag: is_ga3gtm.slice(1, -1) });
+          }
+          if (is_ga4 != null) {
+            responseData.push({ "url": urlsDeDuplicated[i], "version": 4, tag: is_ga4.slice(1, -1) });
+          }
         }
-        if (is_ga4 != null) {
-          responseData.push({ "url": urlsDeDuplicated[i], "version": 4, tag: is_ga4.slice(1, -1) });
-        }
+
         if (is_ga3 == null && is_ga3gtm == null && is_ga4 == null) {
           responseData.push({ "url": urlsDeDuplicated[i], "version": 0, tag: 'sem_tag' });
         }
