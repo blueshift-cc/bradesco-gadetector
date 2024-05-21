@@ -84,7 +84,6 @@ document.getElementById('submitButton').addEventListener('click', function () {
               .every(function () {
                 let column = this;
 
-                console.log(column);
                 // Create select element
                 let select = document.createElement('select');
                 select.style.width = "100%";
