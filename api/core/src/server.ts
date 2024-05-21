@@ -89,9 +89,11 @@ app.post("/process", async function (req: Request, res: Response) {
         const is_ga3gtm = await isGA3GTM(data);
         const is_ga4 = await isGA4(data);
 
-        if ((is_ga3 != null || is_ga3gtm != null) && is_ga4 != null) {
-          responseData.push({ "url": urlsDeDuplicated[i], "version": "3, 4", tag: [...new Set([is_ga3?.slice(1, -1), is_ga3gtm?.slice(1, -1), is_ga4?.slice(1, -1)].filter(n => n))].toString() });
-
+        if (is_ga3 != null && is_ga4 != null) {
+          responseData.push({ "url": urlsDeDuplicated[i], "version": "3, 4", tag: [...new Set([is_ga3?.slice(1, -1), is_ga4?.slice(1, -1)].filter(n => n))].toString() });
+        }
+        else if (is_ga3gtm != null && is_ga4 != null) {
+          responseData.push({ "url": urlsDeDuplicated[i], "version": "4, 4", tag: [...new Set([is_ga3gtm?.slice(1, -1), is_ga4?.slice(1, -1)].filter(n => n))].toString() });
         }
         else {
           if (is_ga3 != null) {
