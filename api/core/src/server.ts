@@ -130,13 +130,13 @@ app.post("/process", async function (req: Request, res: Response) {
           responseData.push({ "url": urlsDeDuplicated[i], "version": tag_ver, tag: tags_.toString(), globalJS: is_globaljs, globalBI: is_globalBI });
         }
         else {
-          if (is_globaljs == null && is_ga3 != null) {
+          if (is_ga3 != null) {
             responseData.push({ "url": urlsDeDuplicated[i], "version": 3, tag: is_ga3.slice(1, -1), globalJS: is_globaljs, globalBI: is_globalBI });
           }
-          if (is_globaljs == null && is_ga3gtm != null) {
+          else if (is_ga3gtm != null) {
             responseData.push({ "url": urlsDeDuplicated[i], "version": 4, tag: is_ga3gtm.slice(1, -1), globalJS: is_globaljs, globalBI: is_globalBI });
           }
-          if (is_globaljs == null && is_ga4 != null) {
+          if (is_ga4 != null) {
             responseData.push({ "url": urlsDeDuplicated[i], "version": 4, tag: is_ga4.slice(1, -1), globalJS: is_globaljs, globalBI: is_globalBI });
           }
           if (is_globaljs != null) {
@@ -144,7 +144,7 @@ app.post("/process", async function (req: Request, res: Response) {
           }
         }
 
-        if (is_ga3 == null && is_ga3gtm == null && is_ga4 == null) {
+        if (is_ga3 == null && is_ga3gtm == null && is_ga4 == null && is_globaljs == null) {
           responseData.push({ "url": urlsDeDuplicated[i], "version": 0, tag: 'sem_tag', globalJS: is_globaljs, globalBI: is_globalBI });
         }
       }).catch((e: any) => {
