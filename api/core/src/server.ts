@@ -103,8 +103,14 @@ app.post("/process", async function (req: Request, res: Response) {
         const is_globaljs = await isGlobalJS(data);
 
         if ((is_ga3 != null || is_ga3gtm != null) && is_ga4 != null) {
-          const tags_ = [...new Set([is_ga3?.slice(1, -1), is_ga3gtm?.slice(1, -1), is_ga4?.slice(1, -1)].filter(n => n))];
+          let tags_ = [...new Set([is_ga3?.slice(1, -1), is_ga3gtm?.slice(1, -1), is_ga4?.slice(1, -1)].filter(n => n))];
+
+          if (is_globaljs != null) {
+            tags_ = [...new Set([is_ga3?.slice(1, -1), is_ga3gtm?.slice(1, -1), is_ga4?.slice(1, -1), "GTM-T9F3WZN"].filter(n => n))];
+          }
+
           const tag_ver = tags_.toString().indexOf('UA-') > -1 && tags_.length > 1 ? "3, 4" : tags_.length > 1 ? "4, 4" : "4";
+
           responseData.push({ "url": urlsDeDuplicated[i], "version": tag_ver, tag: tags_.toString(), globalJS: is_globaljs });
         }
         else {
@@ -112,7 +118,7 @@ app.post("/process", async function (req: Request, res: Response) {
             responseData.push({ "url": urlsDeDuplicated[i], "version": 3, tag: is_ga3.slice(1, -1), globalJS: is_globaljs });
           }
           if (is_ga3gtm != null) {
-            responseData.push({ "url": urlsDeDuplicated[i], "version": 3, tag: is_ga3gtm.slice(1, -1), globalJS: is_globaljs });
+            responseData.push({ "url": urlsDeDuplicated[i], "version": 4, tag: is_ga3gtm.slice(1, -1), globalJS: is_globaljs });
           }
           if (is_ga4 != null) {
             responseData.push({ "url": urlsDeDuplicated[i], "version": 4, tag: is_ga4.slice(1, -1), globalJS: is_globaljs });
