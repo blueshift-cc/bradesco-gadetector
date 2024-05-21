@@ -75,6 +75,18 @@ async function isGlobalJS(data: any) {
   return null;
 }
 
+async function isScriptBI(data: any) {
+  const regexTag = /script_bi.js/gm;
+  let m;
+
+  const tag = data.match(regexTag);
+
+  if (tag?.length > 0) {
+    return tag[0];
+  }
+  return null;
+}
+
 app.get("/", function (req: Request, res: Response) {
   res.send("Hello world");
 });
@@ -101,12 +113,16 @@ app.post("/process", async function (req: Request, res: Response) {
         const is_ga3gtm = await isGA3GTM(data);
         const is_ga4 = await isGA4(data);
         const is_globaljs = await isGlobalJS(data);
+        const is_globalBI = await isScriptBI(data);
 
         if ((is_ga3 != null || is_ga3gtm != null) && is_ga4 != null) {
           let tags_ = [...new Set([is_ga3?.slice(1, -1), is_ga3gtm?.slice(1, -1), is_ga4?.slice(1, -1)].filter(n => n))];
 
           if (is_globaljs != null) {
             tags_ = [...new Set([is_ga3?.slice(1, -1), is_ga3gtm?.slice(1, -1), is_ga4?.slice(1, -1), "GTM-T9F3WZN"].filter(n => n))];
+          }
+          if (is_globalBI != null) {
+            tags_ = [...new Set([is_ga3?.slice(1, -1), is_ga3gtm?.slice(1, -1), is_ga4?.slice(1, -1), "GTM-P5GGXJ8"].filter(n => n))];
           }
 
           const tag_ver = tags_.toString().indexOf('UA-') > -1 && tags_.length > 1 ? "3, 4" : tags_.length > 1 ? "4, 4" : "4";
