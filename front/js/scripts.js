@@ -77,6 +77,7 @@ document.getElementById('submitButton').addEventListener('click', function () {
                 console.log(column);
                 // Create select element
                 let select = document.createElement('select');
+                select.style.width = "100%";
                 select.add(new Option(''));
                 column.footer().replaceChildren(select);
 
@@ -107,7 +108,7 @@ document.getElementById('submitButton').addEventListener('click', function () {
         let chartConfig = {
           type: 'doughnut',
           data: {
-            labels: ["GA3", "GA4", "GA4/GA4", "NÃO TEM GA", "OFFLINE"],
+            labels: ["GA3", "GA4", "GA3/GA4", "NÃO TEM GA", "OFFLINE"],
             datasets: [{
               label: "Versão do Google Analytics",
               data: [ga3count, ga4count, ga34count, ganonecount, offlinecount],
