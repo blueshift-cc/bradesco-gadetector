@@ -139,6 +139,9 @@ app.post("/process", async function (req: Request, res: Response) {
           if (is_ga4 != null) {
             responseData.push({ "url": urlsDeDuplicated[i], "version": 4, tag: is_ga4.slice(1, -1), globalJS: is_globaljs, globalBI: is_globalBI });
           }
+          if (is_globaljs != null) {
+            responseData.push({ "url": urlsDeDuplicated[i], "version": 4, tag: "GTM-T9F3WZN", globalJS: is_globaljs, globalBI: is_globalBI });
+          }
         }
 
         if (is_ga3 == null && is_ga3gtm == null && is_ga4 == null) {
