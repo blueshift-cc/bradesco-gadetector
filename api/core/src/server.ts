@@ -93,7 +93,8 @@ app.post("/process", async function (req: Request, res: Response) {
           responseData.push({ "url": urlsDeDuplicated[i], "version": "3, 4", tag: [...new Set([is_ga3?.slice(1, -1), is_ga4?.slice(1, -1)].filter(n => n))].toString() });
         }
         else if (is_ga3gtm != null && is_ga4 != null) {
-          responseData.push({ "url": urlsDeDuplicated[i], "version": "4, 4", tag: [...new Set([is_ga3gtm?.slice(1, -1), is_ga4?.slice(1, -1)].filter(n => n))].toString() });
+          const tags_ = [...new Set([is_ga3gtm?.slice(1, -1), is_ga4?.slice(1, -1)].filter(n => n))];
+          responseData.push({ "url": urlsDeDuplicated[i], "version": (tags_.length > 1 ? "4, 4" : "4"), tag: [...new Set([is_ga3gtm?.slice(1, -1), is_ga4?.slice(1, -1)].filter(n => n))].toString() });
         }
         else {
           if (is_ga3 != null) {
