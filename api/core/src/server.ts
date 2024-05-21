@@ -87,6 +87,18 @@ async function isScriptBI(data: any) {
   return null;
 }
 
+async function isRedirect(data: any) {
+  const regexTag = /Redirecionando,/gm;
+  let m;
+
+  const tag = data.match(regexTag);
+
+  if (tag?.length > 0) {
+    return tag[0];
+  }
+  return null;
+}
+
 app.get("/", function (req: Request, res: Response) {
   res.send("Hello world");
 });
@@ -114,6 +126,7 @@ app.post("/process", async function (req: Request, res: Response) {
         const is_ga4 = await isGA4(data);
         const is_globaljs = await isGlobalJS(data);
         const is_globalBI = await isScriptBI(data);
+        const is_redirect = await isRedirect(data);
 
         if ((is_ga3 != null || is_ga3gtm != null) && is_ga4 != null) {
           let tags_ = [...new Set([is_ga3?.slice(1, -1), is_ga3gtm?.slice(1, -1), is_ga4?.slice(1, -1)].filter(n => n))];
@@ -144,7 +157,10 @@ app.post("/process", async function (req: Request, res: Response) {
           }
         }
 
-        if (is_ga3 == null && is_ga3gtm == null && is_ga4 == null && is_globaljs == null) {
+        if (is_redirect != null) {
+          responseData.push({ "url": urlsDeDuplicated[i], "version": 0, tag: 'redirect', globalJS: is_globaljs, globalBI: is_globalBI });
+        }
+        else if (is_ga3 == null && is_ga3gtm == null && is_ga4 == null && is_globaljs == null) {
           responseData.push({ "url": urlsDeDuplicated[i], "version": 0, tag: 'sem_tag', globalJS: is_globaljs, globalBI: is_globalBI });
         }
       }).catch((e: any) => {
