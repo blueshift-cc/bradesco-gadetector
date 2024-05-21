@@ -30,6 +30,7 @@ document.getElementById('submitButton').addEventListener('click', function () {
         var ga34count = 0;
         var offlinecount = 0;
         var ganonecount = 0;
+        var redirect = 0;
         data.forEach((itemData) => {
           temp += "<tr>";
           temp += "<td>" + itemData.url + "</td>";
@@ -45,11 +46,20 @@ document.getElementById('submitButton').addEventListener('click', function () {
           else if (itemData.version === "3, 4") {
             ga34count++;
           }
+          else if (itemData.version === "4, 4") {
+            ga4count++;
+          }
           else if (itemData.tag == "offline") {
             offlinecount++;
           }
-          else {
+          else if (itemData.tag == "sem_tag") {
             ganonecount++;
+          }
+          else if (itemData.tag == "sem_tag") {
+            offlinecount++;
+          }
+          else if (itemData.tag == "redirect") {
+            redirect++;
           }
         });
         document.getElementById('tableData').innerHTML = temp;
@@ -108,11 +118,11 @@ document.getElementById('submitButton').addEventListener('click', function () {
         let chartConfig = {
           type: 'doughnut',
           data: {
-            labels: ["GA3", "GA4", "GA3/GA4", "NÃO TEM GA", "OFFLINE"],
+            labels: ["GA3", "GA4", "GA3/GA4", "NÃO TEM GA", "OFFLINE", "REDIRECT"],
             datasets: [{
               label: "Versão do Google Analytics",
-              data: [ga3count, ga4count, ga34count, ganonecount, offlinecount],
-              backgroundColor: ['yellow', 'green', 'blue', 'red', 'gray'],
+              data: [ga3count, ga4count, ga34count, ganonecount, offlinecount, redirect],
+              backgroundColor: ['yellow', 'green', 'blue', 'red', 'gray', 'cyan'],
               hoverOffset: 5
             }],
           },
