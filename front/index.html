@@ -54,6 +54,7 @@
                         <th>URL</th>
                         <th>Versão</th>
                         <th>Tag's</th>
+                        <th>Tracking</th>
                     </tr>
                 </thead>
                 <tbody id="tableData">
@@ -63,9 +64,26 @@
                         <th></th>
                         <th>Versão</th>
                         <th></th>
+                        <th></th>
                     </tr>
                 </tfoot>
             </table>
+        </div>
+    </div>
+    <div class="modal fade" id="trackingModal" tabindex="-1" aria-labelledby="trackingModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tracking</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="tracking-data"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                </div>
+            </div>
         </div>
     </div>
     <!-- Bootstrap core JS-->

@@ -1,3 +1,9 @@
+var trackingData = [];
+
+function replaceModalContent(data) {
+  document.getElementById("tracking-data").innerHTML = trackingData[data];
+}
+
 document.getElementById('submitButton').addEventListener('click', function () {
   let urlTextArea = document.getElementById('urlTextArea').value;
   document.getElementById('resultsDiv').style.display = 'none';
@@ -11,6 +17,7 @@ document.getElementById('submitButton').addEventListener('click', function () {
   }
   document.getElementById('loading-spinner').style.display = 'flex';
   fetch('/api/process', {
+    //fetch('http://localhost:3000/process', {
     method: "POST",
     mode: "cors",
     headers: {
@@ -35,13 +42,24 @@ document.getElementById('submitButton').addEventListener('click', function () {
           temp += "<tr>";
           temp += "<td>" + itemData.url + "</td>";
           temp += "<td>" + itemData.version + "</td>";
-          temp += "<td>" + itemData.tag + "</td></tr>";
+          temp += "<td>" + itemData.tag + "</td>";
+          if (itemData.tag != "sem_tag" && itemData.tag != "offline" && itemData.tag != "redirect") {
+            temp += `<td><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#trackingModal" onclick="replaceModalContent('${itemData.url}')" >Tracking</button></td></tr>`;
+          }
+          else {
+            temp += `<td>---</td></tr>`;
+          }
+
+          trackingData[itemData.url] = itemData.tracking3?.replace(/\)\,/g, ')<br/>') + "," + itemData.tracking4?.replace(/\Event_Data,/g, '<br/>').replace(/\)\,/g, ')<br/>');
 
           if (itemData.version == 3) {
             ga3count++;
           }
           else if (itemData.version == 4) {
             ga4count++;
+          }
+          else if (itemData.version === "3, 3") {
+            ga3count++;
           }
           else if (itemData.version === "3, 4") {
             ga34count++;
@@ -54,9 +72,6 @@ document.getElementById('submitButton').addEventListener('click', function () {
           }
           else if (itemData.tag == "sem_tag") {
             ganonecount++;
-          }
-          else if (itemData.tag == "sem_tag") {
-            offlinecount++;
           }
           else if (itemData.tag == "redirect") {
             redirect++;

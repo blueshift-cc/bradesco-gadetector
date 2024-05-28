@@ -40,25 +40,31 @@ async function isGA3UA(data: any) {
 }
 
 async function isGA3GTM(data: any) {
-  const regexTag = /([=]GTM-[a-zA-Z0-9-]*['"])/gm;
+  //g3 trackbradesco ou ga_event, ga.custom_event, qualquer label (exemplo "eventLabel:")
+  const regexTag = /([=]GTM-[a-zA-Z0-9-]*['"])/gmi;
+  const regexTracking = /trackbradesco\(.*\)|ga_event|ga.custom_event|eventLabel/gmi;
   let m;
-
   const tag = data.match(regexTag);
+  const tracking = data.match(regexTracking);
 
-  if (tag?.length > 0) {
-    return tag[0];
+  if (tag?.length > 0 && tracking?.length > 0) {
+    return [tag[0], tracking];
   }
+
   return null;
 }
 
 async function isGA4(data: any) {
-  const regexTag = /(['"]GTM-[a-zA-Z0-9]*['"])/gm;
+  //ga4 trackportal ou Event_Data
+  const regexTag = /(['"]GTM-[a-zA-Z0-9]*['"])/gmi;
+  const regexTracking = /trackportal\(.*\)|Event_Data/gmi;
   let m;
 
   const tag = data.match(regexTag);
+  const tracking = data.match(regexTracking);
 
-  if (tag?.length > 0) {
-    return tag[0];
+  if (tag?.length > 0 && tracking?.length > 0) {
+    return [tag[0], tracking];
   }
   return null;
 }
@@ -122,52 +128,54 @@ app.post("/process", async function (req: Request, res: Response) {
       await fetch(urlsDeDuplicated[i]).then(async (response: any) => {
         const data = await response.text();
         const is_ga3 = await isGA3UA(data);
-        const is_ga3gtm = await isGA3GTM(data);
-        const is_ga4 = await isGA4(data);
+        const is_ga3gtm: any = await isGA3GTM(data);
+        const is_ga4: any = await isGA4(data);
         const is_globaljs = await isGlobalJS(data);
         const is_globalBI = await isScriptBI(data);
         const is_redirect = await isRedirect(data);
 
         if ((is_ga3 != null || is_ga3gtm != null) && is_ga4 == null) {
-          let tags_ = [...new Set([is_ga3?.slice(1, -1), is_ga3gtm?.slice(1, -1)].filter(n => n))];
+          let tags_ = [...new Set([is_ga3?.slice(1, -1), is_ga3gtm[0]?.slice(1, -1)].filter(n => n))];
 
           if (is_globaljs != null) {
-            tags_ = [...new Set([is_ga3?.slice(1, -1), is_ga3gtm?.slice(1, -1), "GTM-T9F3WZN"].filter(n => n))];
+            tags_ = [...new Set([is_ga3?.slice(1, -1), is_ga3gtm[0]?.slice(1, -1), "GTM-T9F3WZN"].filter(n => n))];
           }
           if (is_globalBI != null) {
-            tags_ = [...new Set([is_ga3?.slice(1, -1), is_ga3gtm?.slice(1, -1), "GTM-P5GGXJ8"].filter(n => n))];
+            tags_ = [...new Set([is_ga3?.slice(1, -1), is_ga3gtm[0]?.slice(1, -1), "GTM-P5GGXJ8"].filter(n => n))];
           }
 
-          const tag_ver = tags_.toString().indexOf('UA-') > -1 && tags_.length > 1 ? "3, 4" : tags_.length > 1 ? "4, 4" : "4";
+          const tag_ver = is_ga3 != null || (is_ga3gtm[1] != null) ? "3, 3" : "3";
+          //const tag_ver = tags_.toString().indexOf('UA-') > -1 && tags_.length > 1 ? "3, 4" : tags_.length > 1 ? "4, 4" : "4";
 
-          responseData.push({ "url": urlsDeDuplicated[i], "version": tag_ver, tag: tags_.toString(), globalJS: is_globaljs, globalBI: is_globalBI });
+          responseData.push({ "url": urlsDeDuplicated[i], "version": tag_ver, tag: tags_.toString(), tracking3: is_ga3gtm[1]?.toString(), tracking4: null, globalJS: is_globaljs, globalBI: is_globalBI });
         }
         else if ((is_ga3 != null || is_ga3gtm != null) && is_ga4 != null) {
-          let tags_ = [...new Set([is_ga3?.slice(1, -1), is_ga3gtm?.slice(1, -1), is_ga4?.slice(1, -1)].filter(n => n))];
+          let tags_ = [...new Set([is_ga3?.slice(1, -1), is_ga3gtm[0]?.slice(1, -1), is_ga4[0]?.slice(1, -1)].filter(n => n))];
 
           if (is_globaljs != null) {
-            tags_ = [...new Set([is_ga3?.slice(1, -1), is_ga3gtm?.slice(1, -1), is_ga4?.slice(1, -1), "GTM-T9F3WZN"].filter(n => n))];
+            tags_ = [...new Set([is_ga3?.slice(1, -1), is_ga3gtm[0]?.slice(1, -1), is_ga4[0]?.slice(1, -1), "GTM-T9F3WZN"].filter(n => n))];
           }
           if (is_globalBI != null) {
-            tags_ = [...new Set([is_ga3?.slice(1, -1), is_ga3gtm?.slice(1, -1), is_ga4?.slice(1, -1), "GTM-P5GGXJ8"].filter(n => n))];
+            tags_ = [...new Set([is_ga3?.slice(1, -1), is_ga3gtm[0]?.slice(1, -1), is_ga4[0]?.slice(1, -1), "GTM-P5GGXJ8"].filter(n => n))];
           }
 
-          const tag_ver = tags_.toString().indexOf('UA-') > -1 && tags_.length > 1 ? "3, 4" : tags_.length > 1 ? "4, 4" : "4";
+          const tag_ver = is_ga3 != null || (is_ga3gtm[1] != null && is_ga4[1] != null) ? "3, 4" : "4";
+          //const tag_ver = tags_.toString().indexOf('UA-') > -1 && tags_.length > 1 ? "3, 4" : tags_.length > 1 ? "4, 4" : "4";
 
-          responseData.push({ "url": urlsDeDuplicated[i], "version": tag_ver, tag: tags_.toString(), globalJS: is_globaljs, globalBI: is_globalBI });
+          responseData.push({ "url": urlsDeDuplicated[i], "version": tag_ver, tag: tags_.toString(), tracking3: is_ga3gtm[1]?.toString(), tracking4: is_ga4[1]?.toString(), globalJS: is_globaljs, globalBI: is_globalBI });
         }
         else {
           if (is_ga3 != null) {
-            responseData.push({ "url": urlsDeDuplicated[i], "version": 3, tag: is_ga3.slice(1, -1), globalJS: is_globaljs, globalBI: is_globalBI });
+            responseData.push({ "url": urlsDeDuplicated[i], "version": 3, tag: is_ga3.slice(1, -1), tracking3: null, tracking4: null, globalJS: is_globaljs, globalBI: is_globalBI });
           }
           else if (is_ga3gtm != null) {
-            responseData.push({ "url": urlsDeDuplicated[i], "version": 4, tag: is_ga3gtm.slice(1, -1), globalJS: is_globaljs, globalBI: is_globalBI });
+            responseData.push({ "url": urlsDeDuplicated[i], "version": 4, tag: is_ga3gtm[0].slice(1, -1), tracking3: is_ga3gtm[1]?.toString(), tracking4: null, globalJS: is_globaljs, globalBI: is_globalBI });
           }
           else if (is_ga4 != null) {
-            responseData.push({ "url": urlsDeDuplicated[i], "version": 4, tag: is_ga4.slice(1, -1), globalJS: is_globaljs, globalBI: is_globalBI });
+            responseData.push({ "url": urlsDeDuplicated[i], "version": 4, tag: is_ga4[0].slice(1, -1), tracking3: null, tracking4: is_ga4[1]?.toString(), globalJS: is_globaljs, globalBI: is_globalBI });
           }
           else if (is_globaljs != null) {
-            responseData.push({ "url": urlsDeDuplicated[i], "version": 4, tag: "GTM-T9F3WZN", globalJS: is_globaljs, globalBI: is_globalBI });
+            responseData.push({ "url": urlsDeDuplicated[i], "version": 4, tag: "GTM-T9F3WZN", tracking3: null, tracking4: null, globalJS: is_globaljs, globalBI: is_globalBI });
           }
         }
 
