@@ -42,12 +42,26 @@ async function isGA3UA(data: any) {
 async function isGA3GTM(data: any) {
   //g3 trackbradesco ou ga_event, ga.custom_event, qualquer label (exemplo "eventLabel:")
   const regexTag = /([=]GTM-[a-zA-Z0-9-]*['"])/gmi;
-  const regexTracking = /trackbradesco\(.*\)|ga_event|ga.custom_event|eventLabel/gmi;
+  const regexTracking = /trackbradesco\(.*\)|ga.custom_event|dataLayer.push\([^)]+\)/gmi;
   let m;
-  const tag = data.match(regexTag);
-  const tracking = data.match(regexTracking);
+  let tag = data.match(regexTag);
+  let tracking = data.match(regexTracking);
+
+  if (tag?.length > 0) {
+    tag = tag.filter(function (element: any) {
+      return element !== undefined;
+    });
+  }
+
+  if (tracking?.length > 0) {
+    tracking = tracking?.filter(function (element: any) {
+      return element.toLowerCase().includes('trackbradesco') || element.toLowerCase().includes('ga.custom_event') || element.toLowerCase().includes('eventlabel');
+    });
+  }
 
   if (tag?.length > 0 && tracking?.length > 0) {
+
+
     return [tag[0], tracking];
   }
 
@@ -57,14 +71,30 @@ async function isGA3GTM(data: any) {
 async function isGA4(data: any) {
   //ga4 trackportal ou Event_Data
   const regexTag = /(['"]GTM-[a-zA-Z0-9]*['"])/gmi;
-  const regexTracking = /trackportal\(.*\)|Event_Data/gmi;
+  //const regexTracking = /trackportal\(.*\)|Event_Data/gmi;
+  const regexTracking = /trackportal\(.*\)|dataLayer.push\([^)]+\)/gmi;
   let m;
 
-  const tag = data.match(regexTag);
-  const tracking = data.match(regexTracking);
+  let tag = data.match(regexTag);
+  let tracking = data.match(regexTracking);
+
+  if (tag?.length > 0) {
+    tag = tag?.filter(function (element: any) {
+      return element !== undefined;
+    });
+  }
+
+  if (tracking?.length > 0) {
+    tracking = tracking?.filter(function (element: any) {
+      return element.toLowerCase().includes('event_data') || element.toLowerCase().includes('trackportal');
+    });
+  }
 
   if (tag?.length > 0 && tracking?.length > 0) {
     return [tag[0], tracking];
+  }
+  if (tracking?.length > 0) {
+    return ["", tracking];
   }
   return null;
 }
@@ -158,25 +188,30 @@ app.post("/process", async function (req: Request, res: Response) {
           if (is_globalBI != null) {
             tags_ = [...new Set([is_ga3?.slice(1, -1), is_ga3gtm[0]?.slice(1, -1), is_ga4[0]?.slice(1, -1), "GTM-P5GGXJ8"].filter(n => n))];
           }
-
           const tag_ver = is_ga3 != null || (is_ga3gtm[1] != null && is_ga4[1] != null) ? "3, 4" : "4";
           //const tag_ver = tags_.toString().indexOf('UA-') > -1 && tags_.length > 1 ? "3, 4" : tags_.length > 1 ? "4, 4" : "4";
 
           responseData.push({ "url": urlsDeDuplicated[i], "version": tag_ver, tag: tags_.toString(), tracking3: is_ga3gtm[1]?.toString(), tracking4: is_ga4[1]?.toString(), globalJS: is_globaljs, globalBI: is_globalBI });
         }
         else {
+          let _data = {};
+
+          if (is_globaljs && is_ga4[0] == "") {
+            is_ga4[0] = '"GTM-T9F3WZN"';
+          }
           if (is_ga3 != null) {
-            responseData.push({ "url": urlsDeDuplicated[i], "version": 3, tag: is_ga3.slice(1, -1), tracking3: null, tracking4: null, globalJS: is_globaljs, globalBI: is_globalBI });
+            _data = { "url": urlsDeDuplicated[i], "version": 3, tag: is_ga3.slice(1, -1), tracking3: null, tracking4: null, globalJS: is_globaljs, globalBI: is_globalBI };
           }
           else if (is_ga3gtm != null) {
-            responseData.push({ "url": urlsDeDuplicated[i], "version": 4, tag: is_ga3gtm[0].slice(1, -1), tracking3: is_ga3gtm[1]?.toString(), tracking4: null, globalJS: is_globaljs, globalBI: is_globalBI });
+            _data = { "url": urlsDeDuplicated[i], "version": 4, tag: is_ga3gtm[0].slice(1, -1), tracking3: is_ga3gtm[1]?.toString(), tracking4: null, globalJS: is_globaljs, globalBI: is_globalBI };
           }
           else if (is_ga4 != null) {
-            responseData.push({ "url": urlsDeDuplicated[i], "version": 4, tag: is_ga4[0].slice(1, -1), tracking3: null, tracking4: is_ga4[1]?.toString(), globalJS: is_globaljs, globalBI: is_globalBI });
+            _data = { "url": urlsDeDuplicated[i], "version": 4, tag: is_ga4[0].slice(1, -1), tracking3: null, tracking4: is_ga4[1]?.toString(), globalJS: is_globaljs, globalBI: is_globalBI };
           }
           else if (is_globaljs != null) {
-            responseData.push({ "url": urlsDeDuplicated[i], "version": 4, tag: "GTM-T9F3WZN", tracking3: null, tracking4: null, globalJS: is_globaljs, globalBI: is_globalBI });
+            _data = { "url": urlsDeDuplicated[i], "version": 4, tag: "GTM-T9F3WZN", tracking3: null, tracking4: null, globalJS: is_globaljs, globalBI: is_globalBI };
           }
+          responseData.push(_data);
         }
 
         if (is_redirect != null) {

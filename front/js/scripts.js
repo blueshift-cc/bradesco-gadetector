@@ -50,7 +50,16 @@ document.getElementById('submitButton').addEventListener('click', function () {
             temp += `<td>---</td></tr>`;
           }
 
-          trackingData[itemData.url] = itemData.tracking3?.replace(/\)\,/g, ')<br/>') + "," + itemData.tracking4?.replace(/\Event_Data,/g, '<br/>').replace(/\)\,/g, ')<br/>');
+          let _content = "";
+          if (itemData.tracking3 != undefined) {
+            _content += itemData.tracking3?.replace(/\)\,/g, ')<br/>') + "<br/>";
+          }
+          if (itemData.tracking4 != undefined) {
+            _content += itemData.tracking4?.replace(/\Event_Data,/g, 'Event_Data<br/>').replace(/\)\,/g, ')<br/>');
+          }
+
+          trackingData[itemData.url] = _content;
+          console.log(trackingData[itemData.url]);
 
           if (itemData.version == 3) {
             ga3count++;
@@ -118,7 +127,8 @@ document.getElementById('submitButton').addEventListener('click', function () {
                   .unique()
                   .sort()
                   .each(function (d, j) {
-                    select.add(new Option(d));
+                    if (!d.startsWith('<button'))
+                      select.add(new Option(d));
                   });
               });
           }
