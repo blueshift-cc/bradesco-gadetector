@@ -55,13 +55,11 @@ async function isGA3GTM(data: any) {
 
   if (tracking?.length > 0) {
     tracking = tracking?.filter(function (element: any) {
-      return element.toLowerCase().includes('trackbradesco') || element.toLowerCase().includes('ga.custom_event') || element.toLowerCase().includes('eventlabel');
+      return (element.toLowerCase().includes('trackbradesco') || element.toLowerCase().includes('ga.custom_event') || element.toLowerCase().includes('eventlabel')) && !element.toLowerCase().includes('botoes-fixos');
     });
   }
 
   if (tag?.length > 0 && tracking?.length > 0) {
-
-
     return [tag[0], tracking];
   }
 
@@ -86,7 +84,7 @@ async function isGA4(data: any) {
 
   if (tracking?.length > 0) {
     tracking = tracking?.filter(function (element: any) {
-      return element.toLowerCase().includes('event_data') || element.toLowerCase().includes('trackportal');
+      return (element.toLowerCase().includes('event_data') || element.toLowerCase().includes('trackportal')) && !element.toLowerCase().includes('botoes-fixos');
     });
   }
 
@@ -194,9 +192,9 @@ app.post("/process", async function (req: Request, res: Response) {
           responseData.push({ "url": urlsDeDuplicated[i], "version": tag_ver, tag: tags_.toString(), tracking3: is_ga3gtm[1]?.toString(), tracking4: is_ga4[1]?.toString(), globalJS: is_globaljs, globalBI: is_globalBI });
         }
         else {
-          let _data = {};
+          let _data = null;
 
-          if (is_globaljs && is_ga4[0] == "") {
+          if (is_globaljs && (is_ga4 != null && is_ga4?.[0] == "")) {
             is_ga4[0] = '"GTM-T9F3WZN"';
           }
           if (is_ga3 != null) {
@@ -208,8 +206,11 @@ app.post("/process", async function (req: Request, res: Response) {
           else if (is_ga4 != null) {
             _data = { "url": urlsDeDuplicated[i], "version": 4, tag: is_ga4[0].slice(1, -1), tracking3: null, tracking4: is_ga4[1]?.toString(), globalJS: is_globaljs, globalBI: is_globalBI };
           }
-          else if (is_globaljs != null) {
+          else if (is_globaljs != null && is_ga4 != null) {
             _data = { "url": urlsDeDuplicated[i], "version": 4, tag: "GTM-T9F3WZN", tracking3: null, tracking4: null, globalJS: is_globaljs, globalBI: is_globalBI };
+          }
+          else {
+            _data = { "url": urlsDeDuplicated[i], "version": 0, tag: "sem_tag", tracking3: null, tracking4: null, globalJS: is_globaljs, globalBI: is_globalBI };
           }
           responseData.push(_data);
         }
