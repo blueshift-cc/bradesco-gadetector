@@ -218,9 +218,9 @@ app.post("/process", async function (req: Request, res: Response) {
         if (is_redirect != null) {
           responseData.push({ "url": urlsDeDuplicated[i], "version": 0, tag: 'redirect', globalJS: is_globaljs, globalBI: is_globalBI });
         }
-        else if (is_ga3 == null && is_ga3gtm == null && is_ga4 == null && is_globaljs == null) {
-          responseData.push({ "url": urlsDeDuplicated[i], "version": 0, tag: 'sem_tag', globalJS: is_globaljs, globalBI: is_globalBI });
-        }
+        // else if (is_ga3 == null && is_ga3gtm == null && is_ga4 == null && is_globaljs == null) {
+        //   responseData.push({ "url": urlsDeDuplicated[i], "version": 0, tag: 'sem_tag', globalJS: is_globaljs, globalBI: is_globalBI });
+        // }
       }).catch((e: any) => {
         console.log(e);
         responseData.push({ "url": urlsDeDuplicated[i], "version": 0, tag: 'offline', globalJS: 'offline' });

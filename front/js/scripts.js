@@ -79,7 +79,7 @@ document.getElementById('submitButton').addEventListener('click', function () {
           else if (itemData.tag == "offline") {
             offlinecount++;
           }
-          else if (itemData.tag == "sem_tag") {
+          else if (itemData.tag == "sem_tag" || itemData.tag == "sem_tracking") {
             ganonecount++;
           }
           else if (itemData.tag == "redirect") {
