@@ -210,7 +210,7 @@ app.post("/process", async function (req: Request, res: Response) {
             _data = { "url": urlsDeDuplicated[i], "version": 4, tag: "GTM-T9F3WZN", tracking3: null, tracking4: null, globalJS: is_globaljs, globalBI: is_globalBI };
           }
           else {
-            _data = { "url": urlsDeDuplicated[i], "version": 0, tag: "sem_tag", tracking3: null, tracking4: null, globalJS: is_globaljs, globalBI: is_globalBI };
+            _data = { "url": urlsDeDuplicated[i], "version": 0, tag: "sem_tracking", tracking3: null, tracking4: null, globalJS: is_globaljs, globalBI: is_globalBI };
           }
           responseData.push(_data);
         }

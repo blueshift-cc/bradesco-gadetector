@@ -43,7 +43,7 @@ document.getElementById('submitButton').addEventListener('click', function () {
           temp += "<td>" + itemData.url + "</td>";
           temp += "<td>" + itemData.version + "</td>";
           temp += "<td>" + itemData.tag + "</td>";
-          if (itemData.tag != "sem_tag" && itemData.tag != "offline" && itemData.tag != "redirect") {
+          if (itemData.tag != "sem_tag" && itemData.tag != "offline" && itemData.tag != "redirect" && itemData.tag != "sem_tracking") {
             temp += `<td><button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#trackingModal" onclick="replaceModalContent('${itemData.url}')" >Tracking</button></td></tr>`;
           }
           else {
