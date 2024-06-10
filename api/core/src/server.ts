@@ -172,7 +172,7 @@ app.post("/process", async function (req: Request, res: Response) {
             tags_ = [...new Set([is_ga3?.slice(1, -1), is_ga3gtm[0]?.slice(1, -1), "GTM-P5GGXJ8"].filter(n => n))];
           }
 
-          const tag_ver = is_ga3 != null || (is_ga3gtm[1] != null) ? "3, 3" : "3";
+          const tag_ver = is_ga3 != null || !Array.isArray(is_ga3gtm[1]) ? "3, 3" : "3";
           //const tag_ver = tags_.toString().indexOf('UA-') > -1 && tags_.length > 1 ? "3, 4" : tags_.length > 1 ? "4, 4" : "4";
 
           responseData.push({ "url": urlsDeDuplicated[i], "version": tag_ver, tag: tags_.toString(), tracking3: is_ga3gtm[1]?.toString(), tracking4: null, globalJS: is_globaljs, globalBI: is_globalBI });

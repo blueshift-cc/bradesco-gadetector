@@ -59,7 +59,6 @@ document.getElementById('submitButton').addEventListener('click', function () {
           }
 
           trackingData[itemData.url] = _content;
-          console.log(trackingData[itemData.url]);
 
           if (itemData.version == 3) {
             ga3count++;
@@ -142,7 +141,7 @@ document.getElementById('submitButton').addEventListener('click', function () {
         let chartConfig = {
           type: 'doughnut',
           data: {
-            labels: ["GA3", "GA4", "GA3/GA4", "NÃO TEM GA", "OFFLINE", "REDIRECT"],
+            labels: ["GA3", "GA4", "GA3/GA4", "SEM GA/TRACKING", "OFFLINE", "REDIRECT"],
             datasets: [{
               label: "Versão do Google Analytics",
               data: [ga3count, ga4count, ga34count, ganonecount, offlinecount, redirect],
