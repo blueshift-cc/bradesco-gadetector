@@ -27,6 +27,26 @@ function isValidHttpUrl(string: any) {
   return url.protocol === "http:" || url.protocol === "https:";
 }
 
+function checkNegateGA(element: any) {
+  return !element.includes('botoes-fixos')
+    && !element.includes('Pop up alerta Bradesco IE')
+    && !element.includes('Menu Inferior')
+    && !element.includes('Rodapé')
+    && !element.includes('Rodape')
+    && !element.includes('Home Principal_cabecalho_geral')
+    && !element.includes('Aviso Cookies')
+    && !element.includes('Home Principal_rodape')
+    && !element.includes('Como_Usar_Bradesco_Net_Empresa')
+    && !element.includes('Dispositivo_de_Segurança')
+    && !element.includes('Chat Pessoa Jurídica (Net Empresa)')
+    && !element.includes('Navegador_Exclusivo_Bradesco')
+    && !element.includes('Smart Banner')
+    && !element.includes('baixe_o_app')
+    && !element.includes('baixar_agora')
+    && !element.includes("'custom.action': 'menu_superior'")
+    && !element.includes("'custom.action': 'header'");
+}
+
 async function isGA3UA(data: any) {
   const regexTag = /(['"]UA-[a-zA-Z0-9-]*['"])/gm;
   let m;
@@ -57,21 +77,7 @@ async function isGA3GTM(data: any) {
     tracking = tracking?.filter(function (element: any) {
       return (element.toLowerCase().includes('trackbradesco') || element.toLowerCase().includes('ga.custom_event')
         || element.toLowerCase().includes('eventlabel'))
-        && (!element.includes('botoes-fixos')
-          && !element.includes('Pop up alerta Bradesco IE')
-          && !element.includes('Menu Inferior')
-          && !element.includes('Rodapé')
-          && !element.includes('Rodape')
-          && !element.includes('Home Principal_cabecalho_geral')
-          && !element.includes('Aviso Cookies')
-          && !element.includes('Home Principal_rodape')
-          && !element.includes('Como_Usar_Bradesco_Net_Empresa')
-          && !element.includes('Dispositivo_de_Segurança')
-          && !element.includes('Chat Pessoa Jurídica (Net Empresa)')
-          && !element.includes('Navegador_Exclusivo_Bradesco')
-          && !element.includes('Smart Banner')
-          && !element.includes('baixe_o_app')
-          && !element.includes('baixar_agora'));
+        && checkNegateGA(element);
     });
   }
 
@@ -101,21 +107,7 @@ async function isGA4(data: any) {
   if (tracking?.length > 0) {
     tracking = tracking?.filter(function (element: any) {
       return (element.toLowerCase().includes('event_data') || element.toLowerCase().includes('trackportal'))
-        && (!element.toLowerCase().includes('botoes-fixos')
-          && !element.includes('Pop up alerta Bradesco IE')
-          && !element.includes('Menu Inferior')
-          && !element.includes('Rodapé')
-          && !element.includes('Rodape')
-          && !element.includes('Home Principal_cabecalho_geral')
-          && !element.includes('Aviso Cookies')
-          && !element.includes('Home Principal_rodape')
-          && !element.includes('Como_Usar_Bradesco_Net_Empresa')
-          && !element.includes('Dispositivo_de_Segurança')
-          && !element.includes('Chat Pessoa Jurídica (Net Empresa)')
-          && !element.includes('Navegador_Exclusivo_Bradesco')
-          && !element.includes('Smart Banner')
-          && !element.includes('baixe_o_app')
-          && !element.includes('baixar_agora'));
+        && checkNegateGA(element);
     });
   }
 
