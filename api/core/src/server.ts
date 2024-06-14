@@ -57,14 +57,14 @@ async function isGA3GTM(data: any) {
     tracking = tracking?.filter(function (element: any) {
       return (element.toLowerCase().includes('trackbradesco') || element.toLowerCase().includes('ga.custom_event')
         || element.toLowerCase().includes('eventlabel'))
-        && (!element.toLowerCase().includes('botoes-fixos')
-          || element.toLowerCase().includes('Pop up alerta Bradesco IE')
-          || element.toLowerCase().includes('Menu Inferior')
-          || element.toLowerCase().includes('Rodapé')
-          || element.toLowerCase().includes('Rodape')
-          || element.toLowerCase().includes('Home Principal_cabecalho_geral')
-          || element.toLowerCase().includes('Aviso Cookies')
-          || element.toLowerCase().includes('Home Principal_rodape'));
+        && (!element.includes('botoes-fixos')
+          || element.includes('Pop up alerta Bradesco IE')
+          || element.includes('Menu Inferior')
+          || element.includes('Rodapé')
+          || element.includes('Rodape')
+          || element.includes('Home Principal_cabecalho_geral')
+          || element.includes('Aviso Cookies')
+          || element.includes('Home Principal_rodape'));
     });
   }
 
@@ -94,13 +94,13 @@ async function isGA4(data: any) {
   if (tracking?.length > 0) {
     tracking = tracking?.filter(function (element: any) {
       return (element.toLowerCase().includes('event_data') || element.toLowerCase().includes('trackportal')) && (!element.toLowerCase().includes('botoes-fixos')
-        || element.toLowerCase().includes('Pop up alerta Bradesco IE')
-        || element.toLowerCase().includes('Menu Inferior')
-        || element.toLowerCase().includes('Rodapé')
-        || element.toLowerCase().includes('Rodape')
-        || element.toLowerCase().includes('Home Principal_cabecalho_geral')
-        || element.toLowerCase().includes('Aviso Cookies')
-        || element.toLowerCase().includes('Home Principal_rodape'));
+        || element.includes('Pop up alerta Bradesco IE')
+        || element.includes('Menu Inferior')
+        || element.includes('Rodapé')
+        || element.includes('Rodape')
+        || element.includes('Home Principal_cabecalho_geral')
+        || element.includes('Aviso Cookies')
+        || element.includes('Home Principal_rodape'));
     });
   }
 
