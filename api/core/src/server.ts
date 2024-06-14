@@ -43,8 +43,8 @@ function checkNegateGA(element: any) {
     && !element.includes('Smart Banner')
     && !element.includes('baixe_o_app')
     && !element.includes('baixar_agora')
-    && !element.includes("'custom.action': 'menu_superior'")
-    && !element.includes("'custom.action': 'header'");
+    && !element.includes('menu_superior')
+    && !element.includes('header');
 }
 
 async function isGA3UA(data: any) {
