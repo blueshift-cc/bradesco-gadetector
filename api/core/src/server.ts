@@ -64,7 +64,14 @@ async function isGA3GTM(data: any) {
           && !element.includes('Rodape')
           && !element.includes('Home Principal_cabecalho_geral')
           && !element.includes('Aviso Cookies')
-          && !element.includes('Home Principal_rodape'));
+          && !element.includes('Home Principal_rodape')
+          && !element.includes('Como_Usar_Bradesco_Net_Empresa')
+          && !element.includes('Dispositivo_de_Segurança')
+          && !element.includes('Chat Pessoa Jurídica (Net Empresa)')
+          && !element.includes('Navegador_Exclusivo_Bradesco')
+          && !element.includes('Smart Banner')
+          && !element.includes('baixe_o_app')
+          && !element.includes('baixar_agora'));
     });
   }
 
@@ -101,7 +108,14 @@ async function isGA4(data: any) {
           && !element.includes('Rodape')
           && !element.includes('Home Principal_cabecalho_geral')
           && !element.includes('Aviso Cookies')
-          && !element.includes('Home Principal_rodape'));
+          && !element.includes('Home Principal_rodape')
+          && !element.includes('Como_Usar_Bradesco_Net_Empresa')
+          && !element.includes('Dispositivo_de_Segurança')
+          && !element.includes('Chat Pessoa Jurídica (Net Empresa)')
+          && !element.includes('Navegador_Exclusivo_Bradesco')
+          && !element.includes('Smart Banner')
+          && !element.includes('baixe_o_app')
+          && !element.includes('baixar_agora'));
     });
   }
 
