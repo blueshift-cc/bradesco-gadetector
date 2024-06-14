@@ -52,10 +52,10 @@ document.getElementById('submitButton').addEventListener('click', function () {
 
           let _content = "";
           if (itemData.tracking3 != undefined) {
-            _content += itemData.tracking3?.replace(/\)\,/g, ')<br/>') + "<br/>";
+            _content += itemData.tracking3?.replace(/\)\,/g, ')<hr style="margin: 5px 0;">') + "<hr style='margin: 5px 0;'>";
           }
           if (itemData.tracking4 != undefined) {
-            _content += itemData.tracking4?.replace(/\Event_Data,/g, 'Event_Data<br/>').replace(/\)\,/g, ')<br/>');
+            _content += itemData.tracking4?.replace(/\Event_Data,/g, 'Event_Data<hr style="margin: 5px 0;">').replace(/\)\,/g, ')<hr style="margin: 5px 0;">');
           }
 
           trackingData[itemData.url] = _content;
